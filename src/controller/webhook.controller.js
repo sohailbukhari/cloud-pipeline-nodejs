@@ -1,7 +1,6 @@
 const exec = require('child_process').exec;
-const { BRANCH } = require('../config/keys');
 
-const REPO_PATH = '~/source';
+const { BRANCH, REPO_PATH, EXEC_COMMAND } = require('../config/keys');
 
 const init = async (payload) => {
   const { ref, pusher, repository, deleted } = payload;
@@ -13,9 +12,10 @@ const init = async (payload) => {
   }
 
   // todo - attach your server repo trigger command here
-  exec(`cd ${REPO_PATH}/${name} && git pull && npm run build && npm run start`);
+  const command = `cd ${REPO_PATH}/${name} && git pull && ${EXEC_COMMAND}`;
+  exec(command);
 
-  console.log('BUILD TRIGGERED', { name, html_url, pusher });
+  console.log('BUILD TRIGGERED', { name, html_url, pusher, command });
 };
 
 module.exports = { init };
