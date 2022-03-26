@@ -1,0 +1,27 @@
+{
+  "name": "cloud-pipeline-nodejs",
+  "version": "1.0.0",
+  "description": "cloud deployment automate pipeline trigger",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sohailbukhari/cloud-pipeline-nodejs.git"
+  },
+  "keywords": [
+    "cloud",
+    "automate deployment",
+    "jenkins alternative",
+    "nodejs",
+    "webhook",
+    "trigger",
+    "sohailbukhari"
+  ],
+  "author": "Sohail Bukhari",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
