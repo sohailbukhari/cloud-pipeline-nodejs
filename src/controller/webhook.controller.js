@@ -13,9 +13,17 @@ const init = async (payload) => {
 
   // todo - attach your server repo trigger command here
   const command = `cd ${REPO_PATH}/${name} && git pull && ${EXEC_COMMAND}`;
-  exec(command);
 
-  console.log('BUILD TRIGGERED', { name, html_url, pusher, command });
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`EXEC ERROR: ${error}`);
+      return;
+    }
+    console.log(`STDOUT: ${stdout}`);
+    console.error(`STDERR: ${stderr}`);
+  });
+
+  console.log('BUILD_TRIGGERED: ', { name, html_url, pusher, command });
 };
 
 module.exports = { init };
