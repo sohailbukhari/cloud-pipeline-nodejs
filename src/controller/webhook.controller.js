@@ -7,7 +7,7 @@ const init = async (payload) => {
   const { name, html_url } = repository;
 
   // trigger against specific branch only
-  if (!ref.includes(BRANCH) || deleted) {
+  if (!ref || !ref.includes(BRANCH) || deleted) {
     return console.log('BUILD SKIPPED', { BRANCH: ref });
   }
 
