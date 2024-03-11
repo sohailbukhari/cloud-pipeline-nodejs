@@ -5,16 +5,27 @@ const { BRANCH, REPO_PATH, EXEC_COMMAND } = require('../config/keys');
 const BRANCHES = BRANCH.split(',');
 const MULTI_DEPLOYMENT = BRANCHES.length > 1;
 
-console.log({ MULTI_DEPLOYMENT });
-
 const init = async (payload) => {
-  const { ref, pusher, repository, deleted } = payload;
-  const { name, html_url } = repository;
+  const { push, repository, actor } = payload;
+
+  if (!push) {
+    return console.log('BUILD SKIPPED', { REASON: 'NO_PUSH', repository: repository.name });
+  }
+
+  const branch = push.changes[0].new.name;
+  const message = push.changes[0].new.target.message;
+
+  const name = repository.name;
+  const html_url = repository.links.html.href;
+
+  const pusher = actor.display_name;
+
+  console.log({ branch, message, name, html_url, pusher });
 
   BRANCHES.forEach((Branch) => {
     // trigger against specific branch only
-    if (!ref || !ref.includes(Branch) || deleted) {
-      return console.log('BUILD SKIPPED', { BRANCH: ref });
+    if (Branch !== branch) {
+      return console.log('BUILD SKIPPED', { BRANCH: branch });
     }
 
     let command = `cd ${REPO_PATH}/${name} && git pull && ${EXEC_COMMAND}`;

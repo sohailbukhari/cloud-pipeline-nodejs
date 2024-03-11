@@ -7,7 +7,7 @@ module.exports = {
     try {
       const chunk = JSON.stringify(req.body);
 
-      let sig = 'sha1=' + crypto.createHmac('sha1', SECRET).update(chunk).digest('hex');
+      let sig = 'sha256=' + crypto.createHmac('sha256', SECRET).update(chunk).digest('hex');
       if (req.headers['x-hub-signature'] != sig) throw { status: 401, message: 'UNAUTHORIZED' };
 
       next();
