@@ -1,4 +1,5 @@
 const exec = require('child_process').exec;
+const slackService = require('../services/slack');
 
 const { BRANCH, REPO_PATH, EXEC_COMMAND } = require('../config/keys');
 
@@ -22,6 +23,14 @@ const init = async (payload) => {
 
   console.log({ branch, message, name, html_url, pusher });
 
+  const slack_payload = {
+    author: pusher,
+    branch: branch,
+    repository: name,
+    commit: message,
+    is_success: true,
+  };
+
   BRANCHES.forEach((Branch) => {
     // trigger against specific branch only
     if (Branch !== branch) {
@@ -38,8 +47,12 @@ const init = async (payload) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`EXEC ERROR: ${error}`);
+        slack_payload.is_success = false;
+        slackService.notification(slack_payload);
         return;
       }
+
+      slackService.notification(slack_payload);
       console.log(`STDOUT: ${stdout}`);
       console.error(`STDERR: ${stderr}`);
     });
